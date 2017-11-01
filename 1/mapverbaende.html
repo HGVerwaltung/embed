@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+
+<head>
+	<title>Hornussen: Gesellschaften</title>
+	<style>
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		}
+	</style>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqNmB0Mk6hOBCG1Lx2tmqVgKBUh3l-JFg&language=de"></script>
+	<script>
+		(function () {
+			var map;
+			var boundary = new google.maps.LatLngBounds();
+
+			function initialize() {
+				var latLng = new google.maps.LatLng(46.8770593, 8.0429356);
+				var mapOptions = {
+					zoom: 8,
+					center: latLng,
+					mapTypeId: google.maps.MapTypeId.HYBRID
+				};
+				map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+				getLocations('EMHV', 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+				getLocations('MWHV', 'http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+				getLocations('OZHV', 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
+				getLocations('NOHV', 'http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+			}
+
+			function getLocations(verband, markerIcon) {
+				var req = new XMLHttpRequest();
+				req.onload = function (e) {
+					var data = JSON.parse(req.response);
+
+					for (var i = 0; i < data.length; i++) {
+						var markerLatLng = new google.maps.LatLng(data[i].lat, data[i].lng);
+						boundary.extend(markerLatLng);
+
+						var marker = new google.maps.Marker({
+							map: map,
+							title: data[i].name,
+							position: markerLatLng
+						});
+						marker.setIcon(markerIcon);
+					}
+
+					map.fitBounds(boundary);
+				}
+				req.open("GET", "//www.hgverwaltung.ch/api/1/verbaende/locations/" + verband);
+				req.send();
+			}
+
+			google.maps.event.addDomListener(window, 'load', initialize);
+		})();
+	</script>
+
+</head>
+
+<body style="height: 100%;">
+	<div id="map" style="height: 100%;"></div>
+</body>
+
+</html>
