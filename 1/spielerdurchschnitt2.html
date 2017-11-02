@@ -1,6 +1,9 @@
 <script src="https://hgverwaltung.ch/polyfill/v2/polyfill.min.js?features=fetch"></script>
 <script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
 <script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
+<script src="https://hgverwaltung.ch/static/tingle-0.12.0.min.js"></script>
+<script src="https://hgverwaltung.ch/static/chart-2.7.1.min.js"></script>
+<link href="https://hgverwaltung.ch/static/tingle-0.12.0.min.css" rel="stylesheet">
 
 <style>
 	#hg_jahrSelect,
@@ -140,11 +143,13 @@
 	</tr>
 </table>
 
+<button id="punkteGrafikButton">Punkte Grafik</button>
+
 <script>
 	(function () {
 		var club = hgutil.getParameterByName('club');
 		if (!club) {
-		  club = 'test';
+			club = 'test';
 		}
 		hgutil.loadSelectFromArray('https://www.hgverwaltung.ch/api/1/' + club + '/spiele/jahre', 'hg_jahrSelect', true, getData);
 		loadSpielerSelect('https://www.hgverwaltung.ch/api/1/' + club + '/spieler', 'hg_spielerSelect', true, getData);
@@ -172,6 +177,96 @@
 
 		allRadios[0].addEventListener("change", getData);
 		allRadios[1].addEventListener("change", getData);
+
+		document.getElementById('punkteGrafikButton').addEventListener('click', onPunkteGrafikButtonClick);
+
+		function onPunkteGrafikButtonClick() {
+			showDiagram(displayedResults);
+		}
+
+		function showDiagram(results) {
+			var modal = new tingle.modal({
+				footer: false,
+				stickyFooter: false,
+				closeMethods: ['overlay', 'button', 'escape'],
+				closeLabel: "Schliessen",
+			});
+			modal.setContent(createDiagramHtml(results));
+			modal.open();
+			drawChart(results);
+		}
+
+		function createDiagramHtml(results) {
+			var html = [];
+
+			html.push('<div id="chart-container" style="position: relative; width:100%">');
+			html.push('<canvas id="chart"></canvas>');
+			html.push('</div>');
+
+			return html.join('');
+		}
+
+		function drawChart(results) {
+			var data = [];
+			var labels = [];
+
+			results.forEach(function (row) {
+				for (i = 0; i < 8; i++) {
+					var p = row['ries' + (i + 1)];
+					if (p > 0 || p === 0) {
+						data.push(p);
+						labels.push([row.datum, row.art, row.gegner, (i + 1) + '. Ries']);
+					}
+				}
+			})
+
+			var ctx = document.getElementById("chart").getContext("2d");
+			if (this.myChart) {
+				this.myChart.destroy();
+			}
+			this.myChart = new Chart(ctx, {
+				type: 'line',
+				width: 200,
+				height: 200,
+				data: {
+					labels: labels,
+					datasets: [{
+						data: data,
+						fill: false,
+						pointRadius: 6,
+						pointHoverRadius: 8,
+						pointBackgroundColor: 'lightblue',
+						showLine: false
+					}]
+				},
+				options: {
+					legend: {
+						display: false
+					},
+					scales: {
+						xAxes: [{
+							display: false,
+							gridLines: {
+								display: false
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Punkte'
+							},
+							ticks: {
+								min: 0,
+								max: 30,
+								stepSize: 5
+							}
+						}]
+					}
+				}
+			});
+
+		}
 
 		function loadSpielerSelect(url, elementId, selectFirst, callback) {
 			fetch(url)
@@ -209,6 +304,7 @@
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {
+					displayedResults = results;
 					showData(results);
 				});
 			}
