@@ -105,7 +105,7 @@
 			for (i = 0; i < results.length; i++) {
 				for (r = 1; r <= 8; r++) {
 					var ries = results[i]['ries'+r];
-					if (ries || ries === 0) {
+					if (ries > 0 || ries === 0) {
 						data[ries]++;
 					}
 				} 
