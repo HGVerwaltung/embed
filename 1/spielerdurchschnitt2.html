@@ -211,7 +211,7 @@
 			var labels = [];
 
 			results.forEach(function (row) {
-				for (i = 0; i < 8; i++) {
+				for (var i = 0; i < 8; i++) {
 					var p = row['ries' + (i + 1)];
 					if (p > 0 || p === 0) {
 						data.push(p);
