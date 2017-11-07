@@ -101,7 +101,8 @@
 				    var p = row['ries' + (i + 1)];
 					if (p > 0 || p === 0) {
 						data.push(p);
-						labels.push([row.datum,row.art,row.gegner, (i+1)+'. Ries']);
+						var hdate = row.datum.substr(8, 2) + '.' + row.datum.substr(5, 2) + '.' + row.datum.substr(0, 4);
+						labels.push([hdate, row.art, row.gegner, (i + 1) + '. Ries']);
 					}
 				}
 			})
