@@ -3,6 +3,8 @@
 <script src="https://hgverwaltung.ch/static/chart-2.7.1.min.js"></script>
 
 <style>
+	#hg_calc_label,
+	#hg_calc,
 	#hg_jahrSelect,
 	#hg_spielerSelect,
 	#hg_data,
@@ -20,6 +22,10 @@
 	#chart-container {
 		margin-top: 20px;
 	}
+
+	#hg_calc_label {
+		margin-left: 20px;
+	}
 </style>
 
 <select id="hg_spielerSelect"></select>
@@ -27,6 +33,11 @@
 <span id="hg_alle">
 	<input type="radio" name="alle" value="1" checked>Alle Spiele
 	<input type="radio" name="alle" value="0">Nur Meisterschaft
+</span>
+<span id="hg_calc_label">Berechnung:</span>
+<span id="hg_calc">
+	<input type="radio" name="calc" value="1" checked>Total
+	<input type="radio" name="calc" value="0">Pro Ries
 </span>
 
 <div id="chart-container" style="position: relative; height:95vh; width:95vw">
@@ -49,6 +60,10 @@
 		document.getElementById('hg_jahrSelect').addEventListener("change", getYearData);
 		document.getElementById('hg_spielerSelect').addEventListener("change", getData);
 		var allRadios = document.getElementById('hg_alle').querySelectorAll("input");
+		allRadios[0].addEventListener("change", getData);
+		allRadios[1].addEventListener("change", getData);
+
+		allRadios = document.getElementById('hg_calc').querySelectorAll("input");
 		allRadios[0].addEventListener("change", getData);
 		allRadios[1].addEventListener("change", getData);
 
@@ -82,27 +97,27 @@
 			allspieleloaded = false;
 			var jahr = document.getElementById('hg_jahrSelect').value;
 			fetch('https://www.hgverwaltung.ch/api/1/' + club + '/mannschaften?spiele=true')
-				.then( function (response) { return response.json(); } )
+				.then(function (response) { return response.json(); })
 				.then(
-					function (teams) {
-						var pr = [];
-						for (var t = 0; t < teams.length; t++) {
-							var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/mannschaftsdurchschnitt/' + teams[t] + '?alle=1' + '&jahr=' + jahr;
-							var pro = fetch(url).then(
-								function (response) {
-									return response.json();
-								}
-							).then(
-								function (spiele) {
-									Array.prototype.push.apply(allspiele,spiele);
-								}
+				function (teams) {
+					var pr = [];
+					for (var t = 0; t < teams.length; t++) {
+						var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/mannschaftsdurchschnitt/' + teams[t] + '?alle=1' + '&jahr=' + jahr;
+						var pro = fetch(url).then(
+							function (response) {
+								return response.json();
+							}
+						).then(
+							function (spiele) {
+								Array.prototype.push.apply(allspiele, spiele);
+							}
 							);
-							pr.push(pro);
-						}
-						return Promise.all(pr);
+						pr.push(pro);
 					}
+					return Promise.all(pr);
+				}
 				)
-				.then(function () { allspieleloaded=true;getData(); } )
+				.then(function () { allspieleloaded = true; getData(); })
 		}
 
 		function getData() {
@@ -129,7 +144,8 @@
 			var low = [];
 			var labels = [];
 			var average = [];
-
+			
+			var proRies = document.querySelector('#hg_calc input[name="calc"]:checked').value === "0";
 			results.forEach(function (row) {
 
 				var total = 0;
@@ -144,21 +160,32 @@
 				}
 
 				if (count > 0) {
-
 					var spiel = allspiele.find(function (item) {
 						return item.id === row.id;
-					});	
+					});
 					if (spiel) {
-						high.push(spiel.hoechstesTotal);
-						low.push(spiel.tiefstesTotal);
-						average.push(spiel.punkteTotalSchnitt);
+						if (proRies) {
+							high.push(spiel.hoechstesTotal / count);
+							low.push(spiel.tiefstesTotal / count);
+							average.push(spiel.punkteTotalSchnitt / count);
+						}
+						else {
+							high.push(spiel.hoechstesTotal);
+							low.push(spiel.tiefstesTotal);
+							average.push(spiel.punkteTotalSchnitt);
+						}
 					}
 					else {
 						high.push(0);
 						low.push(0);
 						average.push(0);
 					}
-					ds.push(total);
+					if (proRies) {
+						ds.push(total / count);
+					}
+					else {
+						ds.push(total);
+					}
 					var hdate = row.datum.substr(8, 2) + '.' + row.datum.substr(5, 2) + '.' + row.datum.substr(0, 4);
 					labels.push([hdate, row.art, row.gegner]);
 				}
@@ -222,6 +249,9 @@
 								return data.labels[tooltipItem[0].index];
 							}
 						}
+					},
+					animation: {
+						duration: 400
 					},
 					legend: {
 						display: true

@@ -6,11 +6,17 @@
 <link href="https://hgverwaltung.ch/static/tingle-0.12.0.min.css" rel="stylesheet">
 
 <style>
+	#hg_calc_label,
+	#hg_calc,
 	#hg_jahrSelect,
 	#hg_spielerSelect,
 	#hg_data,
 	#hg_alle {
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	}
+
+	#hg_calc_label {
+		margin-left: 55px;
 	}
 
 	#hg_jahrSelect,
@@ -199,7 +205,31 @@
 		}
 
 		function onPunkteTotalButtonClick() {
-			showDiagram(displayedResults, drawPunkteTotalChart);
+			var modal = new tingle.modal({
+				footer: false,
+				stickyFooter: false,
+				closeMethods: ['overlay', 'button', 'escape'],
+				closeLabel: "Schliessen",
+			});
+
+			var html = [];
+			html.push('<span id="hg_calc_label">Berechnung:</span>');
+			html.push('<span id="hg_calc">');
+			html.push('<input type="radio" name="calc" value="1" checked>Total');
+			html.push('<input type="radio" name="calc" value="0">Pro Ries');
+			html.push('</span>');
+			html.push('<div id="chart-container" style="position: relative; width:100%">');
+			html.push('<canvas id="chart"></canvas>');
+			html.push('</div>');
+
+			modal.setContent(html.join(''));
+			modal.open();
+			drawPunkteTotalChart(displayedResults);
+
+
+			var allRadios = document.getElementById('hg_calc').querySelectorAll("input");
+			allRadios[0].addEventListener("change", function() {drawPunkteTotalChart(displayedResults);});
+			allRadios[1].addEventListener("change", function() {drawPunkteTotalChart(displayedResults);});
 		}
 
 		function onStreicheButtonClick() {
@@ -236,6 +266,7 @@
 			var labels = [];
 			var average = [];
 
+			var proRies = document.querySelector('#hg_calc input[name="calc"]:checked').value === "0";
 			results.forEach(function (row) {
 
 				var total = 0;
@@ -250,21 +281,32 @@
 				}
 
 				if (count > 0) {
-
 					var spiel = allspiele.find(function (item) {
 						return item.id === row.id;
 					});
 					if (spiel) {
+						if (proRies) {
+							high.push(spiel.hoechstesTotal / count);
+							low.push(spiel.tiefstesTotal / count);
+							average.push(spiel.punkteTotalSchnitt / count);
+						}
+						else {
 						high.push(spiel.hoechstesTotal);
 						low.push(spiel.tiefstesTotal);
 						average.push(spiel.punkteTotalSchnitt);
+					}
 					}
 					else {
 						high.push(0);
 						low.push(0);
 						average.push(0);
 					}
+					if (proRies) {
+						ds.push(total / count);
+					}
+					else {
 					ds.push(total);
+					}
 					var hdate = row.datum.substr(8, 2) + '.' + row.datum.substr(5, 2) + '.' + row.datum.substr(0, 4);
 					labels.push([hdate, row.art, row.gegner]);
 				}
