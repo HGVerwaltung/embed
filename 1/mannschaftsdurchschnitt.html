@@ -72,6 +72,8 @@
 			<th colspan="8">Ries</th>
 			<th colspan="3">Spiel</th>
 			<th colspan="3">Kumuliert</th>
+			<th colspan="2">Streich</th>
+			<th colspan="3">Total</th>
 			<th></th>
 		</tr>
 		<tr>
@@ -92,6 +94,11 @@
 			<th class="sort number" data-sort="punkteKumuliert">Punkte</th>
 			<th class="sort number" data-sort="streicheKumuliert">Streiche</th>
 			<th class="sort number" data-sort="schnittKumuliert">Durchschnitt</th>
+			<th class="sort number" data-sort="laengsterStreich">L&auml;ngster</th>
+			<th class="sort number" data-sort="kuerzesterStreich">K&uuml;rzester</th>
+			<th class="sort number" data-sort="hoechstesTotal">H&ouml;chstes</th>
+			<th class="sort number" data-sort="tiefstesTotal">Tiefstes</th>	
+			<th class="sort number" data-sort="punkteTotalSchnitt">Durchschnitt</th>	
 			<th class="sort number" data-sort="rangpunkte">Rangpunkte</th>
 		</tr>
 	</thead>
@@ -120,6 +127,11 @@
 		<td class="punkteKumuliert number"></td>
 		<td class="streicheKumuliert number"></td>
 		<td class="schnittKumuliert number"></td>
+		<td class="laengsterStreich number"></td>
+		<td class="kuerzesterStreich number"></td>
+		<td class="hoechstesTotal number"></td>
+		<td class="tiefstesTotal number"></td>						
+		<td class="punkteTotalSchnitt number"></td>
 		<td class="rangpunkte number"></td>
 	</tr>
 	<tr id="hg_total_tr">
@@ -135,7 +147,7 @@
 		<td class="total_punkte number"></td>
 		<td class="total_streiche number"></td>
 		<td class="total_schnitt number"></td>
-		<td colspan="4"></td>
+		<td colspan="7"></td>
 	</tr>
 </table>
 
@@ -226,6 +238,10 @@
 				if (row.schnittKumuliert) {
 					row.schnittKumuliert = row.schnittKumuliert.toFixed(2);
 				}
+				if (row.punkteTotalSchnitt) {
+					row.punkteTotalSchnitt = row.punkteTotalSchnitt.toFixed(2);
+				}
+
 				row.datumDisplay = row.datum.substring(8, 10) + '.' + row.datum.substring(5, 7) + '.' + row.datum.substring(0, 4);
 				for (i = 0; i < 8; i++) {
 					if (row['ries' + (i + 1)]) {

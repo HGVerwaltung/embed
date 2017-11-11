@@ -76,13 +76,38 @@
 <table id="hg_data" style="display: none;">
 	<thead>
 		<tr>
+			<th colspan="2"></th>
+			<th colspan="8">Ries</th>
+			<th colspan="2"></th>
+			<th colspan="3">Durchschnitt</th>
+			<th></th>
+			<th colspan="2">Streich</th>
+			<th colspan="2">Spieldurchschnitt</th>
+			<th colspan="2" id="hg_rangpunkte_title">Rangpunkte</th>
+		</tr>
+		<tr>
 			<th class="sort" data-sort="nachname">Nachname</th>
 			<th class="sort" data-sort="vorname">Vorname</th>
+			<th class="sort number" data-sort="ries1Total">1</th>
+			<th class="sort number" data-sort="ries2Total">2</th>
+			<th class="sort number" data-sort="ries3Total">3</th>
+			<th class="sort number" data-sort="ries4Total">4</th>
+			<th class="sort number" data-sort="ries5Total">5</th>
+			<th class="sort number" data-sort="ries6Total">6</th>
+			<th class="sort number" data-sort="ries7Total">7</th>
+			<th class="sort number" data-sort="ries8Total">8</th>
 			<th class="sort number" data-sort="punkte">Punkte</th>
 			<th class="sort number" data-sort="streiche">Streiche</th>
-			<th class="sort number" data-sort="schnitt">Durchschnitt</th>
-			<th class="sort number" data-sort="diff">Ver&auml;nderung Vorjahr</th>
-			<th id="hg_rangpunkte_header" class="sort number" data-sort="rangpunkte">Rangpunkte</th>
+			<th class="sort number" data-sort="schnitt">Selektiertes&nbsp;Jahr</th>
+			<th class="sort number" data-sort="schnittVorjahr">Vorjahr</th>
+			<th class="sort number" data-sort="diff">Ver&auml;nderung</th>
+			<th class="sort number" data-sort="stdAbw">Std.&nbsp;Abw.</th>
+			<th class="sort number" data-sort="laengsterStreich">L&auml;ngster</th>
+			<th class="sort number" data-sort="kuerzesterStreich">K&uuml;rzester</th>
+			<th class="sort number" data-sort="hoechsterSpielSchnitt">H&ouml;chster</th>
+			<th class="sort number" data-sort="tiefsterSpielSchnitt">Tiefster</th>
+			<th id="hg_rangpunkte_header" class="sort number" data-sort="rangpunkte">Selektiertes&nbsp;Jahr</th>
+			<th id="hg_rangpunktevorjahr_header" class="sort number" data-sort="rangpunkteVorjahr">Vorjahr</th>
 		</tr>
 	</thead>
 	<tbody class="hg_list">
@@ -95,19 +120,43 @@
 	<tr id="hg_tr_template">
 		<td class="nachname"></td>
 		<td class="vorname"></td>
+		<td class="ries1Total number"></td>
+		<td class="ries2Total number"></td>
+		<td class="ries3Total number"></td>
+		<td class="ries4Total number"></td>
+		<td class="ries5Total number"></td>
+		<td class="ries6Total number"></td>
+		<td class="ries7Total number"></td>
+		<td class="ries8Total number"></td>
 		<td class="punkte number"></td>
 		<td class="streiche number"></td>
 		<td class="schnitt number"></td>
+		<td class="schnittVorjahr number"></td>
 		<td class="diff number"></td>
+		<td class="stdAbw number"></td>
+		<td class="laengsterStreich number"></td>
+		<td class="kuerzesterStreich number"></td>
+		<td class="hoechsterSpielSchnitt number"></td>
+		<td class="tiefsterSpielSchnitt number"></td>
 		<td class="rangpunkte number"></td>
+		<td class="rangpunkteVorjahr number"></td>
 	</tr>
 	<tr id="hg_total_tr">
 		<td colspan="2" class="total_label"></td>
+		<td class="total_ries1Total number"></td>
+		<td class="total_ries2Total number"></td>
+		<td class="total_ries3Total number"></td>
+		<td class="total_ries4Total number"></td>
+		<td class="total_ries5Total number"></td>
+		<td class="total_ries6Total number"></td>
+		<td class="total_ries7Total number"></td>
+		<td class="total_ries8Total number"></td>
 		<td class="total_punkte number"></td>
 		<td class="total_streiche number"></td>
 		<td class="total_schnitt number"></td>
-		<td></td>
+		<td colspan="6"></td>
 		<td class="total_rangpunkte number" id="hg_rangpunkte_footer"></td>
+		<td class="total_rangpunkteVorjahr number" id="hg_rangpunktevorjahr_footer"></td>
 	</tr>
 </table>
 
@@ -115,7 +164,7 @@
 	(function () {
 		var club = hgutil.getParameterByName('club');
 		if (!club) {
-		  club = 'test';
+			club = 'test';
 		}
 		hgutil.loadSelectFromArray('https://www.hgverwaltung.ch/api/1/' + club + '/spiele/jahre', 'hg_jahrSelect', true, getData);
 		hgutil.loadSelectFromArray('https://www.hgverwaltung.ch/api/1/' + club + '/mannschaften?spiele=true', 'hg_teamSelect', true, getData);
@@ -182,6 +231,7 @@
 			var totalPunkte = 0;
 			var totalStreiche = 0;
 			var totalRp = 0;
+			var totalRpVorjahr = 0;
 			var totalRies = [];
 			for (i = 0; i < 8; i++) {
 				totalRies.push(0);
@@ -189,11 +239,27 @@
 
 			results.forEach(function (row) {
 				if (row.schnitt && row.schnittVorjahr) {
-					row.diff = (parseFloat(row.schnitt) - parseFloat(row.schnittVorjahr)).toFixed(2);
+					row.diff = (parseFloat(row.schnitt) - parseFloat(row.schnittVorjahr)).toFixed(2);					
 				}
 
 				if (row.schnitt) {
 					row.schnitt = row.schnitt.toFixed(2);
+				}
+
+				if (row.schnittVorjahr) {
+					row.schnittVorjahr = row.schnittVorjahr.toFixed(2);
+				}
+
+				if (row.hoechsterSpielSchnitt) {
+					row.hoechsterSpielSchnitt = row.hoechsterSpielSchnitt.toFixed(2);
+				}
+
+				if (row.tiefsterSpielSchnitt) {
+					row.tiefsterSpielSchnitt = row.tiefsterSpielSchnitt.toFixed(2);
+				}
+
+				if (row.stdAbw) {
+					row.stdAbw = row.stdAbw.toFixed(3);
 				}
 
 				if (row.streiche) {
@@ -208,6 +274,15 @@
 					totalRp += row.rangpunkte;
 				}
 
+				if (row.rangpunkteVorjahr) {
+					totalRpVorjahr += row.rangpunkteVorjahr;
+				}
+
+				for (i = 0; i < 8; i++) {
+					if (row['ries' + (i + 1) + 'Total']) {
+						totalRies[i] += row['ries' + (i + 1) + 'Total'];
+					}
+				}
 			});
 			dataList.add(results);
 
@@ -236,6 +311,14 @@
 				totalRow.querySelector(".total_streiche").textContent = totalStreiche;
 				totalRow.querySelector(".total_schnitt").textContent = (totalPunkte / totalStreiche).toFixed(2);
 				totalRow.querySelector(".total_rangpunkte").textContent = totalRp;
+				totalRow.querySelector(".total_rangpunkteVorjahr").textContent = totalRpVorjahr;
+
+				for (i = 0; i < 8; i++) {
+					if (totalRies[i] > 0) {
+						totalRow.querySelector(".total_ries" + (i + 1) + "Total").textContent = totalRies[i];
+					}
+				}
+
 				tfoot.appendChild(totalRow);
 			}
 
@@ -245,16 +328,27 @@
 			});
 			if (teams.length === 1 && teams[0] === 'NW') {
 				document.getElementById('hg_rangpunkte_header').style.display = 'none';
+				document.getElementById('hg_rangpunktevorjahr_header').style.display = 'none';
 				document.getElementById('hg_rangpunkte_footer').style.display = 'none';
+				document.getElementById('hg_rangpunktevorjahr_footer').style.display = 'none';
+				document.getElementById('hg_rangpunkte_title').style.display = 'none';
 
 				var rangpunkteTds = document.getElementById('hg_data').querySelectorAll("td.rangpunkte");
+				for (i = 0; i < rangpunkteTds.length; i++) {
+					rangpunkteTds[i].style.display = 'none';
+				}
+
+				rangpunkteTds = document.getElementById('hg_data').querySelectorAll("td.rangpunkteVorjahr");
 				for (i = 0; i < rangpunkteTds.length; i++) {
 					rangpunkteTds[i].style.display = 'none';
 				}
 			}
 			else {
 				document.getElementById('hg_rangpunkte_header').style.display = '';
+				document.getElementById('hg_rangpunktevorjahr_header').style.display = '';
 				document.getElementById('hg_rangpunkte_footer').style.display = '';
+				document.getElementById('hg_rangpunktevorjahr_footer').style.display = '';
+				document.getElementById('hg_rangpunkte_title').style.display = '';
 			}
 		}
 
