@@ -76,10 +76,11 @@
 	<input type="radio" name="alle" value="0">Nur Meisterschaft
 </span>
 
-<button style="margin-left:100px;" id="punkteButton">Punkte Diagramm</button>
-<button id="punkteSchnittButton">Punkte Schnitt Diagramm</button>
-<button id="punkteTotalButton">Punkte Total Diagramm</button>
-<button id="streicheButton">Streiche Diagramm</button>
+<button style="margin-left:100px;" id="punkteButton">Punkte</button>
+<button id="punkteSchnittButton">Punkte Schnitt</button>
+<button id="punkteTotalButton">Punkte Total</button>
+<button id="rangpunkteButton">Rangpunkte</button>
+<button id="streicheButton">Streiche</button>
 
 <table id="hg_data" style="display: none;margin-top:20px;">
 	<thead>
@@ -195,6 +196,7 @@
 		document.getElementById('punkteButton').addEventListener('click', onPunkteButtonClick);
 		document.getElementById('punkteSchnittButton').addEventListener('click', onPunkteSchnittButtonClick);
 		document.getElementById('punkteTotalButton').addEventListener('click', onPunkteTotalButtonClick);
+		document.getElementById('rangpunkteButton').addEventListener('click', onRangpunkteButtonClick);
 		document.getElementById('streicheButton').addEventListener('click', onStreicheButtonClick);
 
 		function onPunkteButtonClick() {
@@ -229,8 +231,26 @@
 
 
 			var allRadios = document.getElementById('hg_calc').querySelectorAll("input");
-			allRadios[0].addEventListener("change", function() {drawPunkteTotalChart(displayedResults);});
-			allRadios[1].addEventListener("change", function() {drawPunkteTotalChart(displayedResults);});
+			allRadios[0].addEventListener("change", function () { drawPunkteTotalChart(displayedResults); });
+			allRadios[1].addEventListener("change", function () { drawPunkteTotalChart(displayedResults); });
+		}
+
+		function onRangpunkteButtonClick() {
+			var modal = new tingle.modal({
+				footer: false,
+				stickyFooter: false,
+				closeMethods: ['overlay', 'button', 'escape'],
+				closeLabel: "Schliessen",
+			});
+
+			var html = [];
+			html.push('<div id="chart-container" style="position: relative; width:100%">');
+			html.push('<canvas id="chart"></canvas>');
+			html.push('</div>');
+
+			modal.setContent(html.join(''));
+			modal.open();
+			drawRangpunkteChart(displayedResults);
 		}
 
 		function onStreicheButtonClick() {
@@ -292,10 +312,10 @@
 							average.push(spiel.punkteTotalSchnitt / count);
 						}
 						else {
-						high.push(spiel.hoechstesTotal);
-						low.push(spiel.tiefstesTotal);
-						average.push(spiel.punkteTotalSchnitt);
-					}
+							high.push(spiel.hoechstesTotal);
+							low.push(spiel.tiefstesTotal);
+							average.push(spiel.punkteTotalSchnitt);
+						}
 					}
 					else {
 						high.push(0);
@@ -306,7 +326,7 @@
 						ds.push(total / count);
 					}
 					else {
-					ds.push(total);
+						ds.push(total);
 					}
 					var hdate = row.datum.substr(8, 2) + '.' + row.datum.substr(5, 2) + '.' + row.datum.substr(0, 4);
 					labels.push([hdate, row.art, row.gegner]);
@@ -362,6 +382,105 @@
 						borderColor: 'orange',
 						lineTension: 0,
 						pointStyle: 'star'
+					}]
+				},
+				options: {
+					tooltips: {
+						callbacks: {
+							title: function (tooltipItem, data) {
+								return data.labels[tooltipItem[0].index];
+							}
+						}
+					},
+					legend: {
+						display: true
+					},
+					scales: {
+						xAxes: [{
+							display: true,
+							gridLines: {
+								display: true
+							},
+							ticks: {
+								minRotation: 90,
+								maxRotation: 90,
+								autoSkip: false,
+								callback: function (value, index, values) {
+									return value[0];
+								}
+							}
+						}],
+						yAxes: [{
+							display: true,
+							scaleLabel: {
+								display: true,
+								labelString: 'Punkte'
+							},
+							ticks: {
+								min: 0,
+								stepSize: 5
+							}
+						}]
+					}
+				}
+			});
+		}
+
+		function drawRangpunkteChart(results) {
+			var labels = [];
+            var ds = [];
+			var rp = [];
+
+			results.forEach(function (row) {
+
+				var total = 0;
+				var count = 0;
+
+				for (i = 0; i < 8; i++) {
+					var p = row['ries' + (i + 1)];
+					if (p > 0 || p === 0) {
+						count++;
+						total += p;
+					}
+				}
+
+				if (count > 0) {
+					ds.push(total);
+                    rp.push(row.rangpunkte);
+					var hdate = row.datum.substr(8, 2) + '.' + row.datum.substr(5, 2) + '.' + row.datum.substr(0, 4);
+					labels.push([hdate, row.art, row.gegner]);
+				}
+			});
+
+			var ctx = document.getElementById("chart").getContext("2d");
+			if (this.myChart) {
+				this.myChart.destroy();
+			}
+			this.myChart = new Chart(ctx, {
+				type: 'line',
+				width: 200,
+				height: 200,
+				data: {
+					labels: labels,
+					datasets: [{
+						data: ds,
+						label: 'Punkte',
+						fill: true,
+						borderWidth: 2,
+						pointRadius: 6,
+						pointHoverRadius: 7,
+						borderColor: 'green',
+						lineTension: 0
+					}, {
+						data: rp,
+						label: 'Rangpunkte',
+						fill: true,
+						borderWidth: 1,
+						pointRadius: 6,
+						pointHoverRadius: 7,
+						borderColor: 'red',
+						lineTension: 0,
+						pointStyle: 'rect'
 					}]
 				},
 				options: {
@@ -681,27 +800,27 @@
 			allspieleloaded = false;
 			var jahr = document.getElementById('hg_jahrSelect').value;
 			fetch('https://www.hgverwaltung.ch/api/1/' + club + '/mannschaften?spiele=true')
-				.then( function (response) { return response.json(); } )
+				.then(function (response) { return response.json(); })
 				.then(
-					function (teams) {
-						var pr = [];
-						for (var t = 0; t < teams.length; t++) {
-							var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/mannschaftsdurchschnitt/' + teams[t] + '?alle=1' + '&jahr=' + jahr;
-							var pro = fetch(url).then(
-								function (response) {
-									return response.json();
-								}
-							).then(
-								function (spiele) {
-									Array.prototype.push.apply(allspiele,spiele);
-								}
+				function (teams) {
+					var pr = [];
+					for (var t = 0; t < teams.length; t++) {
+						var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/mannschaftsdurchschnitt/' + teams[t] + '?alle=1' + '&jahr=' + jahr;
+						var pro = fetch(url).then(
+							function (response) {
+								return response.json();
+							}
+						).then(
+							function (spiele) {
+								Array.prototype.push.apply(allspiele, spiele);
+							}
 							);
-							pr.push(pro);
-						}
-						return Promise.all(pr);
+						pr.push(pro);
 					}
+					return Promise.all(pr);
+				}
 				)
-				.then(function () { allspieleloaded=true;getData(); } )
+				.then(function () { allspieleloaded = true; getData(); })
 		}
 
 		function getData() {
