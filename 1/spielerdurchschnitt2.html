@@ -446,7 +446,7 @@
 
 				if (count > 0) {
 					ds.push(total);
-                    rp.push(row.rangpunkte);
+                    rp.push(row.rangpunkte || 0);
 					var hdate = row.datum.substr(8, 2) + '.' + row.datum.substr(5, 2) + '.' + row.datum.substr(0, 4);
 					labels.push([hdate, row.art, row.gegner]);
 				}
