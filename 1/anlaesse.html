@@ -49,8 +49,10 @@
 <table id="hg_data" style="display: none;">
 	<thead>
 		<tr>
-			<th class="sort" data-sort="datum">Datum</th>
+			<th class="sort" data-sort="datum">Start</th>
 			<th class="sort" data-sort="zeit">Zeit</th>
+			<th class="sort" data-sort="ende">Ende</th>
+			<th class="sort" data-sort="endeZeit">Zeit</th>			
 			<th class="sort" data-sort="art">Anlass</th>
 			<th class="sort" data-sort="team">Team</th>
 			<th class="sort" data-sort="ort">Ort</th>
@@ -67,6 +69,8 @@
 	<tr id="hg_tr_template">
 		<td class="datumDisplay"></td>
 		<td class="zeit"></td>
+		<td class="endeDisplay"></td>
+		<td class="endeZeit"></td>		
 		<td class="anlass"></td>
 		<td class="team"></td>
 		<td class="ort"></td>
@@ -146,11 +150,21 @@
 			results.forEach(function (row) {
 				row.datumDisplay = row.datum.substring(8, 10) + '.' + row.datum.substring(5, 7) + '.' + row.datum.substring(0, 4);
 				var z = row.datum.substring(11);
-				if (z !== '00:00') {
+				if (!row.ganzerTag) {
 					row.zeit = z;
 				}
 				else {
 					row.zeit = null;
+				}
+				if (row.ende) {
+					row.endeDisplay = row.ende.substring(8, 10) + '.' + row.ende.substring(5, 7) + '.' + row.ende.substring(0, 4);
+					var z = row.ende.substring(11);
+					if (!row.ganzerTag) {
+						row.endeZeit = z;
+					}
+					else {
+						row.endeZeit = null;
+					}
 				}
 			});
 			dataList.add(results);
