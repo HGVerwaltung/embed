@@ -19,7 +19,7 @@
 		background-color: #ebeff4;
 	}
 
-	#hg_data .number {
+	#hg_data .hg_number {
 		text-align: right;
 		padding-right: 5px;
 	}
@@ -83,7 +83,7 @@
 		border-bottom-style: solid;
 	}
 
-	.hg_detail .number {
+	.hg_detail .hg_number {
 		text-align: right;
 		padding-right: 3px;
 	}
@@ -122,8 +122,8 @@
 		text-align: left;
 	}
 
-	#hg_spieler_header th.number,
-	#hg_header th.number {
+	#hg_spieler_header th.hg_number,
+	#hg_header th.hg_number {
 		text-align: right;
 		padding-right: 3px;
 	}
@@ -165,7 +165,7 @@
 		width: 200px;
 	}
 
-	#hg_header .number {
+	#hg_header .hg_number {
 		width: 100px;
 	}
 
@@ -218,10 +218,10 @@
 		<td class="team"></td>
 		<td class="gegner"></td>
 		<td class="spielort"></td>
-		<td class="totalNr number"></td>
-		<td class="schlagPunkte number"></td>
-		<td class="totalNrGegner number"></td>
-		<td class="schlagPunkteGegner number"></td>
+		<td class="totalNr hg_number"></td>
+		<td class="schlagPunkte hg_number"></td>
+		<td class="totalNrGegner hg_number"></td>
+		<td class="schlagPunkteGegner hg_number"></td>
 		<td>
 			<a href="#" class="spiellistelink"></a>
 		</td>
@@ -384,27 +384,27 @@
 			html.push('<tr>');
 			html.push('<th class="mannschaft">Mannschaft</th>');
 			if (result.meisterschaft) {
-				html.push('<th class="number">Rangpunkte</th>');
+				html.push('<th class="hg_number">Rangpunkte</th>');
 			}
-			html.push('<th class="number">Nummer</th>');
-			html.push('<th class="number">Punkte</th>');
+			html.push('<th class="hg_number">Nummer</th>');
+			html.push('<th class="hg_number">Punkte</th>');
 			html.push('</tr>');
 			html.push('<tr id="hg_first">');
 
 			html.push('<td>' + map.hg_mann1 + '</td>');
 			if (result.meisterschaft) {
-				html.push('<td class="number">' + (map.hg_rp1 != null ? map.hg_rp1 : '') + '</td>');
+				html.push('<td class="hg_number">' + (map.hg_rp1 != null ? map.hg_rp1 : '') + '</td>');
 			}
-			html.push('<td class="number">' + (map.hg_nr1 != null ? map.hg_nr1 : '') + '</td>');
-			html.push('<td class="number">' + (map.hg_pu1 != null ? map.hg_pu1 : '') + '</td>');
+			html.push('<td class="hg_number">' + (map.hg_nr1 != null ? map.hg_nr1 : '') + '</td>');
+			html.push('<td class="hg_number">' + (map.hg_pu1 != null ? map.hg_pu1 : '') + '</td>');
 			html.push('</tr>');
 			html.push('<tr id="hg_second">');
 			html.push('<td>' + map.hg_mann2 + '</td>');
 			if (result.meisterschaft) {
-				html.push('<td class="number">' + (map.hg_rp2 != null ? map.hg_rp2 : '') + '</td>');
+				html.push('<td class="hg_number">' + (map.hg_rp2 != null ? map.hg_rp2 : '') + '</td>');
 			}
-			html.push('<td class="number">' + (map.hg_nr2 != null ? map.hg_nr2 : '') + '</td>');
-			html.push('<td class="number">' + (map.hg_pu2 != null ? map.hg_pu2 : '') + '</td>');
+			html.push('<td class="hg_number">' + (map.hg_nr2 != null ? map.hg_nr2 : '') + '</td>');
+			html.push('<td class="hg_number">' + (map.hg_pu2 != null ? map.hg_pu2 : '') + '</td>');
 			html.push('</tr>');
 			html.push('</table>');
 
@@ -420,18 +420,18 @@
 
 
 			// Header			
-			html.push('<th class="reihenfolge number">#</th>');
+			html.push('<th class="reihenfolge hg_number">#</th>');
 			html.push('<th>Name</th>');
 			html.push('<th>Vorname</th>');
 
 			for (var r = 0; r < result.anzahlRies; r++) {
-				html.push('<th class="number">' + (r + 1) + '</th>');
+				html.push('<th class="hg_number">' + (r + 1) + '</th>');
 			}
 
-			html.push('<th class="number">Total</th>');
+			html.push('<th class="hg_number">Total</th>');
 
 			if (result.meisterschaft) {
-				html.push('<th class="number">RP</th>');
+				html.push('<th class="hg_number">RP</th>');
 			}
 
 			html.push('</tr>');
@@ -473,9 +473,9 @@
 			html.push('<td colspan="3"></td>');
 
 			for (var r = 0; r < result.anzahlRies; r++) {
-				html.push('<td class="number">' + totals[r] + '</td>');
+				html.push('<td class="hg_number">' + totals[r] + '</td>');
 			}
-			html.push('<td class="number">' + grandeTotal + '</td>');
+			html.push('<td class="hg_number">' + grandeTotal + '</td>');
 			html.push('</tr>');
 
 
@@ -510,13 +510,13 @@
 
 			var row = [
 				'<tr>',
-				'<td class="reihenfolge number">' + spieler.reihenfolge + '</td>',
+				'<td class="reihenfolge hg_number">' + spieler.reihenfolge + '</td>',
 				'<td class="nachname">' + spieler.nachname + '</td>',
 				'<td class="vorname">' + spieler.vorname + '</td>',
 			];
 
 			for (var r = 0; r < len; r++) {
-				var rs = '<td class="ries number">';
+				var rs = '<td class="ries hg_number">';
 				var value = spieler.ries[r];
 				if (spieler.nr[r]) {
 					rs += '<span class="nr">';
@@ -538,10 +538,10 @@
 
 			}
 
-			row.push('<td class="total number">' + rowTotal + '</td>');
+			row.push('<td class="total hg_number">' + rowTotal + '</td>');
 
 			if (ms) {
-				row.push('<td class="rangpunkt number">' + (spieler.rangpunkte ? spieler.rangpunkte : '') + '</td>');
+				row.push('<td class="rangpunkt hg_number">' + (spieler.rangpunkte ? spieler.rangpunkte : '') + '</td>');
 			}
 
 			row.push('</tr>');

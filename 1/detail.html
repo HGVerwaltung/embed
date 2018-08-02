@@ -19,7 +19,7 @@
 		border-bottom-style: solid;
 	}
 
-	.number {
+	.hg_number {
 		text-align: right;
 		padding-right: 3px;
 	}
@@ -58,8 +58,8 @@
 		text-align: left;
 	}
 
-	#hg_spieler_header th.number,
-	#hg_header th.number {
+	#hg_spieler_header th.hg_number,
+	#hg_header th.hg_number {
 		text-align: right;
 		padding-right: 3px;
 	}
@@ -101,7 +101,7 @@
 		width: 200px;
 	}
 
-	#hg_header .number {
+	#hg_header .hg_number {
 		width: 100px;
 	}
 
@@ -129,25 +129,25 @@
 	<table id="hg_header">
 		<tr>
 			<th class="mannschaft">Mannschaft</th>
-			<th class="number" id="hg_rp_header">Rangpunkte</th>
-			<th class="number">Nummer</th>
-			<th class="number">Punkte</th>
+			<th class="hg_number" id="hg_rp_header">Rangpunkte</th>
+			<th class="hg_number">Nummer</th>
+			<th class="hg_number">Punkte</th>
 		</tr>
 		<tr id="hg_first">
 			<td>
 				<a href="#" id="hg_mann1"></a>
 			</td>
-			<td class="number" id="hg_rp1"></td>
-			<td class="number" id="hg_nr1"></td>
-			<td class="number" id="hg_pu1"></td>
+			<td class="hg_number" id="hg_rp1"></td>
+			<td class="hg_number" id="hg_nr1"></td>
+			<td class="hg_number" id="hg_pu1"></td>
 		</tr>
 		<tr id="hg_second">
 			<td>
 				<a href="#" id="hg_mann2"></a>
 			</td>
-			<td class="number" id="hg_rp2"></td>
-			<td class="number" id="hg_nr2"></td>
-			<td class="number" id="hg_pu2"></td>
+			<td class="hg_number" id="hg_rp2"></td>
+			<td class="hg_number" id="hg_nr2"></td>
+			<td class="hg_number" id="hg_pu2"></td>
 		</tr>
 	</table>
 
@@ -244,19 +244,19 @@
 
 			// Header			
 			var headerRow = [
-				'<th class="reihenfolge number">#</th>',
+				'<th class="reihenfolge hg_number">#</th>',
 				'<th>Name</th>',
 				'<th>Vorname</th>'
 			];
 
 			for (var r = 0; r < result.anzahlRies; r++) {
-				headerRow.push('<th class="number">' + (r + 1) + '</th>');
+				headerRow.push('<th class="hg_number">' + (r + 1) + '</th>');
 			}
 
-			headerRow.push('<th class="number">Total</th>');
+			headerRow.push('<th class="hg_number">Total</th>');
 
 			if (result.meisterschaft) {
-				headerRow.push('<th class="number">RP</th>');
+				headerRow.push('<th class="hg_number">RP</th>');
 			}
 
 			var header = document.getElementById('hg_spieler_header');
@@ -295,9 +295,9 @@
 				'<td colspan="3"></td>',
 			];
 			for (var r = 0; r < result.anzahlRies; r++) {
-				totalRow.push('<td class="number">' + totals[r] + '</td>');
+				totalRow.push('<td class="hg_number">' + totals[r] + '</td>');
 			}
-			totalRow.push('<td class="number">' + grandeTotal + '</td>');
+			totalRow.push('<td class="hg_number">' + grandeTotal + '</td>');
 			totalRow.push('</tr>');
 
 			var tfoot = document.getElementById('hg_spieler').getElementsByTagName('tfoot')[0];
@@ -322,13 +322,13 @@
 
 			var row = [
 				'<tr>',
-				'<td class="reihenfolge number">' + spieler.reihenfolge + '</td>',
+				'<td class="reihenfolge hg_number">' + spieler.reihenfolge + '</td>',
 				'<td class="nachname">' + spieler.nachname + '</td>',
 				'<td class="vorname">' + spieler.vorname + '</td>',
 			];
 
 			for (var r = 0; r < len; r++) {
-				var rs = '<td class="ries number">';
+				var rs = '<td class="ries hg_number">';
 				var value = spieler.ries[r];
 				if (spieler.nr[r]) {
 					rs += '<span class="nr">';
@@ -350,10 +350,10 @@
 
 			}
 
-			row.push('<td class="total number">' + rowTotal + '</td>');
+			row.push('<td class="total hg_number">' + rowTotal + '</td>');
 
 			if (ms) {
-				row.push('<td class="rangpunkt number">' + (spieler.rangpunkte ? spieler.rangpunkte : '') + '</td>');
+				row.push('<td class="rangpunkt hg_number">' + (spieler.rangpunkte ? spieler.rangpunkte : '') + '</td>');
 			}
 
 			row.push('</tr>');

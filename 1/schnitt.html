@@ -28,7 +28,7 @@
 		cursor: default;
 	}
 
-	#hg_data .number {
+	#hg_data .hg_number {
 		text-align: right;
 		padding-right: 5px;
 	}
@@ -79,11 +79,11 @@
 		<tr>
 			<th class="sort" data-sort="nachname">Nachname</th>
 			<th class="sort" data-sort="vorname">Vorname</th>
-			<th class="sort number" data-sort="punkte">Punkte</th>
-			<th class="sort number" data-sort="streiche">Streiche</th>
-			<th class="sort number" data-sort="schnitt">Durchschnitt</th>
-			<th class="sort number" data-sort="diff">Ver&auml;nderung Vorjahr</th>
-			<th id="hg_rangpunkte_header" class="sort number" data-sort="rangpunkte">Rangpunkte</th>
+			<th class="sort hg_number" data-sort="punkte">Punkte</th>
+			<th class="sort hg_number" data-sort="streiche">Streiche</th>
+			<th class="sort hg_number" data-sort="schnitt">Durchschnitt</th>
+			<th class="sort hg_number" data-sort="diff">Ver&auml;nderung Vorjahr</th>
+			<th id="hg_rangpunkte_header" class="sort hg_number" data-sort="rangpunkte">Rangpunkte</th>
 		</tr>
 	</thead>
 	<tbody class="hg_list">
@@ -96,19 +96,19 @@
 	<tr id="hg_tr_template">
 		<td class="nachname"></td>
 		<td class="vorname"></td>
-		<td class="punkte number"></td>
-		<td class="streiche number"></td>
-		<td class="schnitt number"></td>
-		<td class="diff number"></td>
-		<td class="rangpunkte number"></td>
+		<td class="punkte hg_number"></td>
+		<td class="streiche hg_number"></td>
+		<td class="schnitt hg_number"></td>
+		<td class="diff hg_number"></td>
+		<td class="rangpunkte hg_number"></td>
 	</tr>
 	<tr id="hg_total_tr">
 		<td colspan="2" class="total_label"></td>
-		<td class="total_punkte number"></td>
-		<td class="total_streiche number"></td>
-		<td class="total_schnitt number"></td>
+		<td class="total_punkte hg_number"></td>
+		<td class="total_streiche hg_number"></td>
+		<td class="total_schnitt hg_number"></td>
 		<td></td>
-		<td class="total_rangpunkte number" id="hg_rangpunkte_footer"></td>
+		<td class="total_rangpunkte hg_number" id="hg_rangpunkte_footer"></td>
 	</tr>
 </table>
 

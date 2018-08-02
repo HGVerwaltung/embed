@@ -35,11 +35,11 @@
 		background-color: #ebeff4;
 	}
 
-	#hg_data td.number.plus {
+	#hg_data td.hg_number.plus {
 		background-color: lightgreen;
 	}
 
-	#hg_data td.number.minus {
+	#hg_data td.hg_number.minus {
 		background-color: lightcoral;
 	}
 
@@ -51,7 +51,7 @@
 		cursor: default;
 	}
 
-	#hg_data .number {
+	#hg_data .hg_number {
 		text-align: right;
 		padding-right: 5px;
 	}
@@ -88,7 +88,7 @@
 </span>
 <span id="hg_anzahl">
 	Anzahl Spiele:
-	<input type="number" min="1" max="999">
+	<input type="hg_number" min="1" max="999">
 </span>
 
 <table id="hg_data" style="display: none;">
@@ -159,7 +159,7 @@
 			code.push('<th class="sort" data-sort="nachname">Nachname</th>');
 			code.push('<th class="sort" data-sort="vorname">Vorname</th>');
 			for (var i = 0; i < spielInfos.length; i++) {
-				code.push('<th class="sort number" data-sort="spiel_' + (i + 1) + '"><span class="hint--top" aria-label="' + spielInfos[i].gegner + '">' + spielInfos[i].datum + '</span></th>');
+				code.push('<th class="sort hg_number" data-sort="spiel_' + (i + 1) + '"><span class="hint--top" aria-label="' + spielInfos[i].gegner + '">' + spielInfos[i].datum + '</span></th>');
 			}
 			code.push('</tr>');
 
@@ -172,7 +172,7 @@
 			code.push('<td class="vorname"></td>');
 
 			for (var i = 0; i < len; i++) {
-				code.push('<td class="spiel_' + (i + 1) + ' number"></td>');
+				code.push('<td class="spiel_' + (i + 1) + ' hg_number"></td>');
 			}
 
 			return code.join('');
@@ -232,7 +232,7 @@
 			var srows = document.getElementById('hg_list').querySelectorAll('tr');
 			for (; i < srows.length; i++) {
 				var srow = srows[i];
-				var tds = srow.querySelectorAll('.number');
+				var tds = srow.querySelectorAll('.hg_number');
 				var lastValue, value;
 				if (tds.length >= 1) {
 					lastValue = parseFloat(tds[0].textContent);

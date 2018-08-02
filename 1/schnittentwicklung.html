@@ -18,11 +18,11 @@
 		background-color: #ebeff4;
 	}
 
-	#hg_data td.number.plus {
+	#hg_data td.hg_number.plus {
 		background-color: lightgreen;
 	}
 
-	#hg_data td.number.minus {
+	#hg_data td.hg_number.minus {
 		background-color: lightcoral;
 	}
 
@@ -34,7 +34,7 @@
 		cursor: default;
 	}
 
-	#hg_data .number {
+	#hg_data .hg_number {
 		text-align: right;
 		padding-right: 5px;
 		padding-left: 5px;
@@ -161,12 +161,12 @@
 			for (var j = 0; j < results.jahre.length; j++) {
 				th = document.createElement('th');
 				th.innerHTML = results.jahre[j];
-				th.classList.add('number');
+				th.classList.add('hg_number');
 				tableHeaderTr.appendChild(th);
 
 				td = document.createElement('td');
 				td.classList.add('j' + results.jahre[j]);
-				td.classList.add('number');
+				td.classList.add('hg_number');
 				tableTemplateTr.appendChild(td);
 			}
 
@@ -199,7 +199,7 @@
 			var srows = document.getElementById('hg_list').querySelectorAll('tr');
 			for (; i < srows.length; i++) {
 				var srow = srows[i];
-				var tds = srow.querySelectorAll('.number');
+				var tds = srow.querySelectorAll('.hg_number');
 				var lastValue, value;
 				if (tds.length >= 1) {
 					lastValue = parseFloat(tds[0].textContent);

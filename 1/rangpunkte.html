@@ -26,7 +26,7 @@
 		cursor: default;
 	}
 
-	#hg_data .number {
+	#hg_data .hg_number {
 		text-align: right;
 		padding-right: 5px;
 	}
@@ -122,10 +122,10 @@
 			code.push('<th class="sort" data-sort="nachname">Nachname</th>');
 			code.push('<th class="sort" data-sort="vorname">Vorname</th>');
 			for (var i = 0; i < spielInfos.length; i++) {
-				code.push('<th class="sort number" data-sort="spiel_' + (i + 1) + '"><span class="hint--top" aria-label="' + spielInfos[i].gegner + '">' + spielInfos[i].datum + '</span></th>');
+				code.push('<th class="sort hg_number" data-sort="spiel_' + (i + 1) + '"><span class="hint--top" aria-label="' + spielInfos[i].gegner + '">' + spielInfos[i].datum + '</span></th>');
 			}
-			code.push('<th class="sort number" data-sort="total">Total</th>');
-			code.push('<th class="sort number" data-sort="totalVorjahr">Total Vorjahr</th>');
+			code.push('<th class="sort hg_number" data-sort="total">Total</th>');
+			code.push('<th class="sort hg_number" data-sort="totalVorjahr">Total Vorjahr</th>');
 			code.push('</tr>');
 
 			return code.join('');
@@ -137,10 +137,10 @@
 			code.push('<td class="vorname"></td>');
 
 			for (var i = 0; i < len; i++) {
-				code.push('<td class="spiel_' + (i + 1) + ' number"></td>');
+				code.push('<td class="spiel_' + (i + 1) + ' hg_number"></td>');
 			}
-			code.push('<td class="total number"></td>');
-			code.push('<td class="totalVorjahr number"></td>');
+			code.push('<td class="total hg_number"></td>');
+			code.push('<td class="totalVorjahr hg_number"></td>');
 
 			return code.join('');
 		}
@@ -149,7 +149,7 @@
 			var code = [];
 			code.push('<td colspan="2" class="total_label"></td>');
 			for (var i = 0; i < len; i++) {
-				code.push('<td class="total_' + (i + 1) + ' number"></td>');
+				code.push('<td class="total_' + (i + 1) + ' hg_number"></td>');
 			}
 			code.push('<td></td>');
 			code.push('<td></td>');
@@ -231,7 +231,7 @@
 			var tds = document.getElementById('hg_data').getElementsByTagName('td');
 			for (i = 0; i < tds.length; i++) {
 				var td = tds[i];
-				if (td.classList.contains("number") && !td.classList.contains("total") && !td.classList.contains("totalVorjahr")) {
+				if (td.classList.contains("hg_number") && !td.classList.contains("total") && !td.classList.contains("totalVorjahr")) {
 					if (parseInt(td.textContent) >= 20) {
 						td.classList.add('over20');
 					}
