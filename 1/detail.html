@@ -217,7 +217,7 @@
 			map.hg_nr2 = result.totalNrGegner;
 			map.hg_pu2 = result.schlagPunkteGegner;
 
-			map.hg_bericht = result.bericht;
+			map.hg_bericht = result.bericht ? result.bericht : '';
 
 			for (var key in map) {
 				if (map.hasOwnProperty(key)) {
