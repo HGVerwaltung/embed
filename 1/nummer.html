@@ -73,19 +73,22 @@
 				});
 			}
 			else {
-				showData([]);
+				showData({nummern: [], total: []});
 			}
 		}
 
 		function showData(data) {
+			var nrs = data.nummern;
+			var totals = data.total;
+
 			var tn = document.getElementById('totalNummern');
 			tn.innerText = '';
 			draw.clear();
-			if (data === null || data.length === 0) {
+			if (nrs === null || nrs.length === 0) {
 				return;
 			}
 
-			var total = data.reduce(function(acc, cv) {
+			var total = nrs.reduce(function(acc, cv) {
 				return acc + cv;
 			});
 			tn.innerText = total;
@@ -100,16 +103,16 @@
 			var noOfFields = 21;
 
 			for (i = 0; i < noOfFields; i++) {
-				if (data[i] === 0) {
+				if (nrs[i] === 0) {
 					colors.push('none');
 				}
-				else if (data[i] < 5) {
+				else if (nrs[i] < 5) {
 					colors.push('LightSalmon');
 				}
-				else if (data[i] < 10) {
+				else if (nrs[i] < 10) {
 					colors.push('DarkSalmon');
 				}
-				else if (data[i] < 15) {
+				else if (nrs[i] < 15) {
 					colors.push('IndianRed');
 				}
 				else {
@@ -125,9 +128,24 @@
 				draw.text("" + (noOfFields - i)).move((noOfFields - i) < 10 ? xStart - 15 : xStart - 25, 10 + y);
 				draw.text("" + (noOfFields - i)).move((noOfFields - i) < 10 ? xEnd + 7 : xEnd + 7, 10 + y);
 
-				var r = data[noOfFields - (i + 1)];
+				var r = nrs[noOfFields - (i + 1)];
 				if (r > 0) {
-					draw.text("" + r).move(r < 10 ? 278 : 273, 10 + y).font('weight', 'bold');
+					draw.text("" + r).move(r < 10 ? 278 : 273, 5 + y).font('weight', 'bold').font({ size: 18 });
+				}
+
+				var t = totals[noOfFields - (i + 1)];
+				if (t > 0) {
+					var tx;
+					if (t < 10) {
+                       tx = 326;
+					}
+					else if (t < 100) {
+                       tx = 318;
+					}
+					else {
+                       tx = 310;
+					}					
+					draw.text("" + t).move(tx, 7 + y).font('weight', 'normal').font({ size: 16 }).fill({ color: '#3c3c3c' });					
 				}
 
 				xStart = xStart + 4;
