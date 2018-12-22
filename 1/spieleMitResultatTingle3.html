@@ -195,6 +195,25 @@
 		text-decoration: none;
 		color: black;
 	}
+	
+	.hg_spieler_1 {
+	  width: 40vw; 
+	  display:inline-block; 
+	  vertical-align: top;
+	}
+	
+	.hg_spieler_2 {
+      width: 40vw; 
+	  margin-left: 80px; 
+	  display:inline-block; 
+	  vertical-align: top;	
+	}
+	
+	@media (max-width : 540px) {
+	   .hg_spieler_2 {
+	       margin-left: 0;
+	   }
+	}
 </style>
 
 <select id="hg_teamSelect" size="3" multiple></select>
@@ -415,12 +434,12 @@
 				return html.join('');
 			}
 
-			html.push('<div style="width: 40vw; display:inline-block; vertical-align: top;">');
+			html.push('<div class="hg_spieler_1">');
 			html.push(createPunkte(result, 'spieler', ''));
 			html.push('</div>');
 
 			if (result.gegnerSpieler) {
-				html.push('<div style="width: 40vw; margin-left: 80px; display:inline-block; vertical-align: top;">');				
+				html.push('<div class="hg_spieler_2">');				
 				html.push(createPunkte(result, 'gegnerSpieler', '_g'));
 				html.push('</div>');
 			}
