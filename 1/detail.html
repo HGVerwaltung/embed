@@ -258,6 +258,9 @@
 			if (result.meisterschaft) {
 				headerRow.push('<th class="hg_number">RP</th>');
 			}
+			if (result.fest) {
+				headerRow.push('<th>Ausz.</th>');
+			}
 
 			var header = document.getElementById('hg_spieler_header');
 			header.innerHTML = headerRow.join('');
@@ -267,7 +270,7 @@
 			var spieler = [];
 			result[spielerProperty].forEach(function (row) {
 				if (!row.ueberzaehlig) {
-					spieler.push(createSpielerRow(result.anzahlRies, result.meisterschaft, row));
+					spieler.push(createSpielerRow(result, row));
 				}
 			});
 
@@ -308,7 +311,7 @@
 			var ueberSpieler = [];
 			result[spielerProperty].forEach(function (row) {
 				if (row.ueberzaehlig) {
-					ueberSpieler.push(createSpielerRow(result.anzahlRies, result.meisterschaft, row));
+					ueberSpieler.push(createSpielerRow(result, row));
 				}
 			});
 
@@ -316,8 +319,12 @@
 			tbody.innerHTML = ueberSpieler.join('');
 		}
 
-		function createSpielerRow(len, ms, spieler) {
+		function createSpielerRow(result, spieler) {
 
+			var len = result.anzahlRies;
+			var ms = result.meisterschaft;
+			var fest = result.fest;
+			
 			var rowTotal = 0;
 
 			var row = [
@@ -354,6 +361,9 @@
 
 			if (ms) {
 				row.push('<td class="rangpunkt hg_number">' + (spieler.rangpunkte ? spieler.rangpunkte : '') + '</td>');
+			}
+			if (fest) {
+				row.push('<td>' + (spieler.auszeichnung ? spieler.auszeichnung : '') + '</td>');
 			}
 
 			row.push('</tr>');
