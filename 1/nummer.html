@@ -27,7 +27,7 @@
 	<input type="radio" name="gegner" value="1">Gegnerische Nummern
 </span>
 
-<div style="margin-left: 260px;">
+<div style="margin-left: 170px;">
    Total:  <b id="totalNummern"></b>
 </div> 
 
@@ -55,7 +55,7 @@
 		gegnerRadios[1].addEventListener("change", getData);
 
 		var draw = SVG('drawing').size(500, 740);
-
+		//draw.scale(0.9, 0.9);
 		function getData() {
 			var jahr = document.getElementById('hg_jahrSelect').value;
 			var teams = Array.prototype.slice.call(document.querySelectorAll('#hg_teamSelect option:checked'), 0).map(function (v) {
@@ -95,7 +95,8 @@
 
 			var i = 0;
 
-			var xStart = 100;
+            var leftMargin = 25;
+			var xStart = leftMargin;
 			var xEnd = xStart + 366;
 			var y = 0;
 			var height = 35;
@@ -130,20 +131,20 @@
 
 				var r = nrs[noOfFields - (i + 1)];
 				if (r > 0) {
-					draw.text("" + r).move(r < 10 ? 278 : 273, 5 + y).font('weight', 'bold').font({ size: 18 });
+					draw.text("" + r).move(r < 10 ? leftMargin + 178 : leftMargin + 173, 5 + y).font('weight', 'bold').font({ size: 18 });
 				}
 
 				var t = totals[noOfFields - (i + 1)];
 				if (t > 0) {
 					var tx;
 					if (t < 10) {
-                       tx = 326;
+                       tx = leftMargin + 226;
 					}
 					else if (t < 100) {
-                       tx = 318;
+                       tx = leftMargin + 218;
 					}
 					else {
-                       tx = 310;
+                       tx = leftMargin + 210;
 					}					
 					draw.text("" + t).move(tx, 7 + y).font('weight', 'normal').font({ size: 16 }).fill({ color: '#3c3c3c' });					
 				}
