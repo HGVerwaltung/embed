@@ -120,7 +120,8 @@
 			}, 200)();
 		}
 		function getLocations(liga) {
-			return fetch("https://www.hgverwaltung.ch/api/1/clubs/locations/" + liga)
+			var clubs = liga === 'alle';
+			return fetch("https://www.hgverwaltung.ch/api/1/clubs/locations/" + liga + "?clubs="+clubs)
 				.then(function (response) {
 					return response.json();
 				}).then(function (results) {
