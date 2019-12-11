@@ -1,6 +1,3 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
 <script src="https://hgverwaltung.ch/polyfill/v2/polyfill.min.js?features=fetch"></script>
 <script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
 <script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
@@ -122,30 +119,25 @@
 	}
 
 	#hg_spieler_header th,
-	#hg_header th,
-	#hg_spieler_header_g th {
+	#hg_header th {
 		text-align: left;
 	}
 
 	#hg_spieler_header th.hg_number,
-	#hg_header th.hg_number,
-	#hg_spieler_header_g th.hg_number {
+	#hg_header th.hg_number {
 		text-align: right;
 		padding-right: 3px;
 	}
 
-	#hg_spieler,
-	#hg_spieler_g {
+	#hg_spieler {
 		margin-top: 20px;
 	}
 
-	#hg_spieler tfoot,
-	#hg_spieler_g tfoot {
+	#hg_spieler tfoot {
 		line-height: 2.2em;
 	}
 
-	#hg_spieler thead,
-	#hg_spieler_g thead {
+	#hg_spieler thead {
 		line-height: 2.2em;
 	}
 
@@ -204,9 +196,7 @@
 			<th class="sort" data-sort="datum">Datum</th>
 			<th class="sort" data-sort="zeit">Zeit</th>
 			<th class="sort" data-sort="art">Anlass</th>
-			<th class="sort" data-sort="team">Mannschaft</th>
 			<th class="sort" data-sort="gegner">Gegner</th>
-			<th class="sort" data-sort="spielort">Ort</th>
 			<th class="sort" data-sort="totalNr">Nr</th>
 			<th class="sort" data-sort="schlagPunkte">Punkte</th>
 			<th class="sort" data-sort="totalNrGegner">Nr Gegner</th>
@@ -225,20 +215,18 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>
 		</tr>
 	</tbody>
 	<tfoot>
 		<tr>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
 			<td>&nbsp;</td>			
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>			
+			<td>&nbsp;</td>
 			<td>&nbsp;</td>	
 		</tr>	
 	</tfoot>
@@ -249,9 +237,7 @@
 		<td class="datumDisplay"></td>
 		<td class="zeit"></td>
 		<td class="art"></td>
-		<td class="team"></td>
 		<td class="gegner"></td>
-		<td class="spielort"></td>
 		<td class="totalNr hg_number"></td>
 		<td class="schlagPunkte hg_number"></td>
 		<td class="totalNrGegner hg_number"></td>
@@ -350,6 +336,8 @@
 							var atag = atags[j];
 							var sid = spielId;
 							atag.addEventListener("click", function () {
+								var gegner = atag.dataset.gegner;
+
 								var modal = new tingle.modal({
 									footer: false,
 									stickyFooter: false,
@@ -357,7 +345,7 @@
 									closeLabel: "Schliessen",
 								});
 
-								showDetail(modal, sid);
+								showDetail(modal, sid, gegner == '1');
 
 							});
 						})();
@@ -366,19 +354,29 @@
 			}
 		}
 
-		function showDetail(modal, spielId) {
-			var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spiel/' + spielId + '?gegner=1';
+		function showDetail(modal, spielId, gegner) {
+			var gegnerQuery = '';
+			if (gegner) {
+				gegnerQuery = '?gegner=1';
+			}
+
+			var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spiel/' + spielId + gegnerQuery;
 
 			fetch(url).then(function (response) {
 				return response.json();
 			}).then(function (result) {
-				modal.setContent(createDetailHtml(result));
+				modal.setContent(createDetailHtml(result, gegner));
 				modal.open();
 			});
 		}
 
-		function createDetailHtml(result) {
+		function createDetailHtml(result, gegner) {
 			var html = [];
+
+			var spielerProperty = 'spieler';
+			if (gegner) {
+				spielerProperty = 'gegnerSpieler';
+			}
 
 			var d = result.datum;
 
@@ -432,49 +430,38 @@
 
 			html.push('<div id="hg_bericht">' + map.hg_bericht + '</div>');
 
-			if (!result.spieler || result.spieler.len === 0) {
-				html.push('</div>');
+			if (!result[spielerProperty] || result[spielerProperty].len === 0) {
 				return html.join('');
 			}
 
-			html.push(createPunkte(result, 'spieler', ''));
-			if (result.gegnerSpieler) {
-				html.push(createPunkte(result, 'gegnerSpieler', '_g'));
-			}
-			html.push('</div>');
-
-
-			return html.join('');
-		}
-
-		function createPunkte(result, spielerProperty, postfix) {
-			var code = [];
-			code.push('<table id="hg_spieler' + postfix + '">');
-			code.push('<thead>');
-			code.push('<tr id="hg_spieler_header' + postfix + '">');
+			html.push('<table id="hg_spieler">');
+			html.push('<thead>');
+			html.push('<tr id="hg_spieler_header">');
 
 
 			// Header			
-			code.push('<th class="reihenfolge hg_number">#</th>');
-			code.push('<th>Name</th>');
-			code.push('<th>Vorname</th>');
+			html.push('<th class="reihenfolge hg_number">#</th>');
+			html.push('<th>Name</th>');
+			html.push('<th>Vorname</th>');
 
 			for (var r = 0; r < result.anzahlRies; r++) {
-				code.push('<th class="hg_number">' + (r + 1) + '</th>');
+				html.push('<th class="hg_number">' + (r + 1) + '</th>');
 			}
 
-			code.push('<th class="hg_number">Total</th>');
+			html.push('<th class="hg_number">Total</th>');
 
 			if (result.meisterschaft) {
-				code.push('<th class="hg_number">RP</th>');
+				html.push('<th class="hg_number">RP</th>');
 			}
 			if (result.fest) {
-				code.push('<th>Ausz.</th>');
+				html.push('<th>Ausz.</th>');
 			}			
 
-			code.push('</tr>');
-			code.push('</thead>');
-			code.push('<tbody>');
+			html.push('</tr>');
+			html.push('</thead>');
+			html.push('<tbody>');
+
+
 
 			// Spieler
 			var spieler = [];
@@ -484,10 +471,10 @@
 				}
 			});
 
-			Array.prototype.push.apply(code, spieler);
+			Array.prototype.push.apply(html, spieler);
 
-			code.push('</tbody>');
-			code.push('<tfoot>');
+			html.push('</tbody>');
+			html.push('<tfoot>');
 
 
 			// Total Row
@@ -505,24 +492,24 @@
 				}
 			});
 
-			code.push('<tr class="total">');
-			code.push('<td colspan="3"></td>');
+			html.push('<tr class="total">');
+			html.push('<td colspan="3"></td>');
 
 			for (var r = 0; r < result.anzahlRies; r++) {
-				code.push('<td class="hg_number">' + totals[r] + '</td>');
+				html.push('<td class="hg_number">' + totals[r] + '</td>');
 			}
-			code.push('<td class="hg_number">' + grandeTotal + '</td>');
-			code.push('</tr>');
+			html.push('<td class="hg_number">' + grandeTotal + '</td>');
+			html.push('</tr>');
 
 
-			code.push('</tfoot>');
-			code.push('</table>');
+			html.push('</tfoot>');
+			html.push('</table>');
 
 
 			// Ueberzaehlige Spieler
 
-			code.push('<table id="hg_ueber_spieler">');
-			code.push('<tbody>');
+			html.push('<table id="hg_ueber_spieler">');
+			html.push('<tbody>');
 
 			var ueberSpieler = [];
 			result[spielerProperty].forEach(function (row) {
@@ -531,12 +518,13 @@
 				}
 			});
 
-			Array.prototype.push.apply(code, ueberSpieler);
+			Array.prototype.push.apply(html, ueberSpieler);
 
-			code.push('</tbody>');
-			code.push('</table>');
+			html.push('</tbody>');
+			html.push('</table>');
+			html.push('</div>');
 
-			return code.join('');
+			return html.join('');
 		}
 
 		function createSpielerRow(result, spieler) {
