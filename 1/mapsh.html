@@ -5,8 +5,8 @@
 	<meta charset='utf-8' />
 	<title>Hornussen: Gesellschaften</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-	<script src='https://hgverwaltung.ch/static/mapbox-gl-0.50.0.js'></script>
-	<link href='https://hgverwaltung.ch/static/mapbox-gl-0.50.0.css' rel='stylesheet' />
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css' rel='stylesheet' />
 	<script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch,String.prototype.startsWith"></script>
 	<script src="https://hgverwaltung.ch/static/lunr-2.3.8.js"></script>
 	<style>
@@ -19,7 +19,7 @@
 			position: absolute;
 			top: 35px;
 			bottom: 0;
-			width: 100%;
+			width: 99%;
 		}
 		/*]]>*/
 	</style>
@@ -77,7 +77,7 @@
 		function initialize() {
 			map = new mapboxgl.Map({
 				container: 'map',
-				style: 'https://maps.hgverwaltung.ch/styles/klokantech-basic/style.json',
+				style: 'https://maps.hgverwaltung.ch/styles/basic-preview/style.json',
 				hash: true,
 				zoom: 8.5,
 				center: [7.8941, 47.1799]
