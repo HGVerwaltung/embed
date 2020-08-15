@@ -1,6 +1,6 @@
 <script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch"></script>
 <script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
-<script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
+<script src="https://hgverwaltung.ch/static/hgutil-1.2.js"></script>
 
 <style>
     /* <![CDATA[ */
@@ -153,7 +153,8 @@
 		var options = {
 			valueNames: valueNames,
 			listClass: 'hg_list',
-			item: 'hg_tr_template'
+			item: 'hg_tr_template',
+			sortFunction: hgutil.sortFunction
 		};
 
 		var dataList = new List('hg_data', options);
