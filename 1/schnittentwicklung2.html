@@ -6,7 +6,7 @@
 <link href="https://hgverwaltung.ch/static/tingle-0.15.2.min.css" rel="stylesheet">
 
 <style>
-    /* <![CDATA[ */
+	/* <![CDATA[ */
 	#hg_teamSelect,
 	#hg_data,
 	#hg_alle {
@@ -67,6 +67,7 @@
 	#hg_total_tr td {
 		font-weight: bold;
 	}
+
 	/*]]>*/
 </style>
 
@@ -120,6 +121,11 @@
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {
+					var i = 0;
+					for (var res of results.spieler) {
+						res.id = i;
+						i++;
+					}
 					showData(results);
 				});
 			}
@@ -245,15 +251,18 @@
 			for (; n < names.length; n++) {
 				(function () {
 					var row = n;
-					names[n].addEventListener('click', function () {						
-						onSpielerClick(row)
-					}, false);
+					if (dataList.items[row]) {
+						var id = dataList.items[row]._values.id;
+						names[n].addEventListener('click', function () {
+							onSpielerClick(id)
+						}, false);
+					}
 				})();
 			}
 		}
 
-		function onSpielerClick(row) {
-			showDiagram(dataList.items[row]._values);
+		function onSpielerClick(id) {
+			showDiagram(dataList.get("id", id)[0]._values);
 		}
 
 		function showDiagram(result) {
@@ -318,7 +327,7 @@
 				}
 			});
 
-		}		
+		}
 
 		function createDiagramHtml(result) {
 			var html = [];
