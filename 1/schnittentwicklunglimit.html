@@ -106,7 +106,7 @@
 			var alle = document.querySelector('#hg_alle input[name="alle"]:checked').value;
 
 			if (teams && teams.length > 0) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/jahredurchschnitt/' + teams.join(',') + '?limite=5&alle=' + alle;
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/jahredurchschnitt/' + teams.join(',').replaceAll('/', '--') + '?limite=5&alle=' + alle;
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {

@@ -116,7 +116,7 @@
 			});
 
 			if (teams && teams.length > 0) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spieler?inklDetail=true&aufgestellteSpieler=false&mannschaft=' + teams.join(',');
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spieler?inklDetail=true&aufgestellteSpieler=false&mannschaft=' + teams.join(',').replaceAll('/', '--');
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {
