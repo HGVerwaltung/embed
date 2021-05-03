@@ -145,7 +145,7 @@
 			var anzahl = document.querySelector('#hg_anzahl input').value;
 
 			if (jahr && teams && teams.length > 0) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/saisondurchschnitt/' + teams.join(',').replaceAll('/', '--') + '?alle=' + alle + '&jahr=' + jahr + '&fortlaufend=' + fortlaufend;
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/saisondurchschnitt/' + teams.join(',').replace(/\//g,'--') + '?alle=' + alle + '&jahr=' + jahr + '&fortlaufend=' + fortlaufend;
 				if (anzahl) {
 					url += '&limite=' + anzahl;
 				}

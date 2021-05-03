@@ -303,7 +303,7 @@
 			});
 
 			if (jahr && teams && teams.length > 0) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spiele/' + teams.join(',').replaceAll('/', '--') + '?jahr=' + jahr;
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spiele/' + teams.join(',').replace(/\//g,'--') + '?jahr=' + jahr;
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {

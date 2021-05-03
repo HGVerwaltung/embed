@@ -67,7 +67,7 @@
 			var gegner = document.querySelector('#hg_gegner input[name="gegner"]:checked').value;
 
 			if (jahr && teams && teams.length > 0) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/nummer/' + teams.join(',').replaceAll('/', '--') + '?alle=' + alle + '&jahr=' + jahr + '&gegner=' + gegner;
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/nummer/' + teams.join(',').replace(/\//g,'--') + '?alle=' + alle + '&jahr=' + jahr + '&gegner=' + gegner;
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {

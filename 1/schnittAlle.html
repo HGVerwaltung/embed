@@ -254,7 +254,7 @@
 			var alle = document.querySelector('#hg_alle input[name="alle"]:checked').value;
 
 			if (jahr && teams && teams.length > 0) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/durchschnitt/' + teams.join(',').replaceAll('/', '--') + '?alle=' + alle + '&jahr=' + jahr;
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/durchschnitt/' + teams.join(',').replace(/\//g,'--') + '?alle=' + alle + '&jahr=' + jahr;
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {

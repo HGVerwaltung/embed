@@ -156,7 +156,7 @@
 			});
 
 			if (jahr) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/anlaesse/?jahr=' + jahr + '&inklSpiele=' + inklSpiele + '&mannschaft=' + teams.join(',').replaceAll('/', '--');
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/anlaesse/?jahr=' + jahr + '&inklSpiele=' + inklSpiele + '&mannschaft=' + teams.join(',').replace(/\//g,'--');
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {
