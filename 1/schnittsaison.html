@@ -1,7 +1,7 @@
 <script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch"></script>
-<script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js"></script>
 <script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
-<link rel="stylesheet" href="https://hgverwaltung.ch/static/hint.base-2.5.0.min.css"></link>
+<link rel="stylesheet" href="https://https://cdn.jsdelivr.net/npm/leaflet@1.8.0/dist/leaflet.csskg.com/hint.css@2.7.0/hint.base.min.css"></link>
 
 <style>
     /* <![CDATA[ */
@@ -97,12 +97,12 @@
 	<thead>
 		<tr>
 			<th>&nbsp;</th>
-		</tr>		
+		</tr>
 	</thead>
 	<tbody class="hg_list" id="hg_list">
 		<tr>
 			<td>&nbsp;</td>
-		</tr>		
+		</tr>
 	</tbody>
 </table>
 
@@ -167,7 +167,7 @@
 			code.push('<th class="sort" data-sort="nachname">Nachname</th>');
 			code.push('<th class="sort" data-sort="vorname">Vorname</th>');
 			for (var i = 0; i < spielInfos.length; i++) {
-				code.push('<th class="sort hg_number" data-sort="spiel_' + (i + 1) + '"><span class="hint--top" aria-label="' + spielInfos[i].gegner + '">' + spielInfos[i].datum + '</span></th>');
+				code.push('<th class="sort hg_number" data-sort="spiel_' + (i + 1) + '"><span class="hint--top" aria-label="' + (spielInfos[i].gegner ? spielInfos[i].gegner : '') + '">' + spielInfos[i].datum + '</span></th>');
 			}
 			code.push('</tr>');
 

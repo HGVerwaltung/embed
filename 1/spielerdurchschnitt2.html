@@ -1,14 +1,14 @@
 <script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch"></script>
-<script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js"></script>
 <script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
-<script src="https://hgverwaltung.ch/static/tingle-0.15.2.min.js"></script>
-<script src="https://hgverwaltung.ch/static/chart-2.9.3.min.js"></script>
-<link href="https://hgverwaltung.ch/static/tingle-0.15.2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tingle.js@0.16.0/dist/tingle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tingle.js@0.16.0/dist/tingle.min.css" rel="stylesheet">
 
 <style>
     /* <![CDATA[ */
 	#hg_calc_label,
-	#hg_calc,
+	.hg_calc,
 	#hg_jahrSelect,
 	#hg_spielerSelect,
 	#hg_data,
@@ -125,12 +125,12 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>	
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>	
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
@@ -147,16 +147,16 @@
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>	
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-			<td>&nbsp;</td>	
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
-		</tr>	
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
 	</tfoot>
 </table>
 
@@ -257,24 +257,24 @@
 				closeLabel: "Schliessen",
 			});
 
+			var rnd = (Math.random() + 1).toString(36).substring(7);
 			var html = [];
 			html.push('<span id="hg_calc_label">Berechnung:</span>');
-			html.push('<span id="hg_calc">');
+			html.push('<span class="hg_calc" id="hg_calc_'+rnd+'">');
 			html.push('<input type="radio" name="calc" value="1" checked>Total');
 			html.push('<input type="radio" name="calc" value="0">Pro Ries');
 			html.push('</span>');
 			html.push('<div id="chart-container" style="position: relative; width:100%">');
-			html.push('<canvas id="chart"></canvas>');
+			html.push('<canvas id="'+rnd+'"></canvas>');
 			html.push('</div>');
 
 			modal.setContent(html.join(''));
 			modal.open();
-			drawPunkteTotalChart(displayedResults);
+			drawPunkteTotalChart(displayedResults, rnd);
 
-
-			var allRadios = document.getElementById('hg_calc').querySelectorAll("input");
-			allRadios[0].addEventListener("change", function () { drawPunkteTotalChart(displayedResults); });
-			allRadios[1].addEventListener("change", function () { drawPunkteTotalChart(displayedResults); });
+			var allRadios = document.getElementById('hg_calc_'+rnd).querySelectorAll("input");
+			allRadios[0].addEventListener("change", function () { drawPunkteTotalChart(displayedResults, rnd); });
+			allRadios[1].addEventListener("change", function () { drawPunkteTotalChart(displayedResults, rnd); });
 		}
 
 		function onRangpunkteButtonClick() {
@@ -285,14 +285,15 @@
 				closeLabel: "Schliessen",
 			});
 
+			var rnd = (Math.random() + 1).toString(36).substring(7);
 			var html = [];
 			html.push('<div id="chart-container" style="position: relative; width:100%">');
-			html.push('<canvas id="chart"></canvas>');
+			html.push('<canvas id="'+rnd+'"></canvas>');
 			html.push('</div>');
 
 			modal.setContent(html.join(''));
 			modal.open();
-			drawRangpunkteChart(displayedResults);
+			drawRangpunkteChart(displayedResults, rnd);
 		}
 
 		function onStreicheButtonClick() {
@@ -306,22 +307,23 @@
 				closeMethods: ['overlay', 'button', 'escape'],
 				closeLabel: "Schliessen",
 			});
-			modal.setContent(createDiagramHtml(results));
+			var rnd = (Math.random() + 1).toString(36).substring(7);
+			modal.setContent(createDiagramHtml(results, rnd));
 			modal.open();
-			drawFunction(results);
+			drawFunction(results, rnd);
 		}
 
-		function createDiagramHtml(results) {
+		function createDiagramHtml(results, rnd) {
 			var html = [];
 
 			html.push('<div id="chart-container" style="position: relative; width:100%">');
-			html.push('<canvas id="chart"></canvas>');
+			html.push('<canvas id="'+rnd+'"></canvas>');
 			html.push('</div>');
 
 			return html.join('');
 		}
 
-		function drawPunkteTotalChart(results) {
+		function drawPunkteTotalChart(results, rnd) {
 
 			var ds = [];
 			var high = [];
@@ -329,7 +331,7 @@
 			var labels = [];
 			var average = [];
 
-			var proRies = document.querySelector('#hg_calc input[name="calc"]:checked').value === "0";
+			var proRies = document.querySelector('#hg_calc_'+rnd+' input[name="calc"]:checked').value === "0";
 			results.forEach(function (row) {
 
 				var total = 0;
@@ -375,7 +377,7 @@
 				}
 			});
 
-			var ctx = document.getElementById("chart").getContext("2d");
+			var ctx = document.getElementById(rnd).getContext("2d");
 			if (this.myChart) {
 				this.myChart.destroy();
 			}
@@ -396,7 +398,7 @@
 						lineTension: 0
 					}, {
 						data: high,
-						label: 'Höchstes Total',
+						label: 'Hoechstes Total',
 						fill: false,
 						borderWidth: 1,
 						pointRadius: 6,
@@ -468,7 +470,7 @@
 			});
 		}
 
-		function drawRangpunkteChart(results) {
+		function drawRangpunkteChart(results, rnd) {
 			var labels = [];
             var ds = [];
 			var rp = [];
@@ -494,7 +496,7 @@
 				}
 			});
 
-			var ctx = document.getElementById("chart").getContext("2d");
+			var ctx = document.getElementById(rnd).getContext("2d");
 			if (this.myChart) {
 				this.myChart.destroy();
 			}
@@ -567,7 +569,7 @@
 			});
 		}
 
-		function drawPunkteSchnittChart(results) {
+		function drawPunkteSchnittChart(results, rnd) {
 			var ds = [];
 			var high = [];
 			var low = [];
@@ -598,7 +600,7 @@
 				}
 			})
 
-			var ctx = document.getElementById("chart").getContext("2d");
+			var ctx = document.getElementById(rnd).getContext("2d");
 			if (this.myChart) {
 				this.myChart.destroy();
 			}
@@ -619,7 +621,7 @@
 						lineTension: 0
 					}, {
 						data: high,
-						label: 'Längster Streich',
+						label: 'Laengster Streich',
 						fill: false,
 						borderWidth: 1,
 						pointRadius: 6,
@@ -629,7 +631,7 @@
 						pointStyle: 'rect'
 					}, {
 						data: low,
-						label: 'Kürzester Streich',
+						label: 'Kuerzester Streich',
 						fill: false,
 						borderWidth: 1,
 						pointRadius: 6,
@@ -682,7 +684,7 @@
 			});
 		}
 
-		function drawStreicheChart(results) {
+		function drawStreicheChart(results, rnd) {
 
 			var data = [];
 			var labels = [];
@@ -703,7 +705,7 @@
 			}
 
 
-			var ctx = document.getElementById("chart").getContext("2d");
+			var ctx = document.getElementById(rnd).getContext("2d");
 			if (this.myChart) {
 				this.myChart.destroy();
 			}
@@ -749,7 +751,7 @@
 			});
 		}
 
-		function drawPunkteChart(results) {
+		function drawPunkteChart(results, rnd) {
 			var data = [];
 			var labels = [];
 
@@ -764,7 +766,7 @@
 				}
 			})
 
-			var ctx = document.getElementById("chart").getContext("2d");
+			var ctx = document.getElementById(rnd).getContext("2d");
 			if (this.myChart) {
 				this.myChart.destroy();
 			}

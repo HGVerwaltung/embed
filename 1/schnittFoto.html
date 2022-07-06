@@ -1,5 +1,5 @@
 <script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch"></script>
-<script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js"></script>
 <script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
 
 <style>
@@ -93,7 +93,7 @@
 		template.push('   <h6><span class="nachname"></span>&nbsp;<span class="vorname"></span>&nbsp;<span class="jahrgang"></span></h6>');
 		template.push('   <div class="detail">');
 		template.push('     <div class="col">');
-		template.push('        <span class="coldetail" style="width: 55px;">Punkte:</span><br><b class="punkte"></b>');		
+		template.push('        <span class="coldetail" style="width: 55px;">Punkte:</span><br><b class="punkte"></b>');
 		template.push('        <br>');
 		template.push('        <span class="coldetail" style="width: 55px;">Streiche:</span><br><b class="streiche"></b>');
 		template.push('     </div>');
@@ -106,7 +106,7 @@
 		template.push('     </div>');
 		template.push('     <div class="col">');
 		template.push('        <span class="coldetail" style="width: 110px;">Std. Abw.:</span><br><b class="stdAbw"></b>');
-		template.push('        <br>');		
+		template.push('        <br>');
 		template.push('        <span class="coldetail" style="width: 110px;">L&auml;ngster&nbsp;Streich:</span><br><b class="laengsterStreich"></b>');
 		template.push('        <br>');
 		template.push('        <span class="coldetail" style="width: 110px;">K&uuml;rzester&nbsp;Streich:</span><br><b class="kuerzesterStreich"></b>');
@@ -196,7 +196,7 @@
 
 				if (row.stdAbw) {
 					row.stdAbw = row.stdAbw.toFixed(3);
-				}				
+				}
 
 				if (row.hoechsterSpielSchnitt) {
 					row.hoechsterSpielSchnitt = row.hoechsterSpielSchnitt.toFixed(2);

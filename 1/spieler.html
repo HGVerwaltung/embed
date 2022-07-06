@@ -1,5 +1,5 @@
 <script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch"></script>
-<script src="https://hgverwaltung.ch/static/list-1.5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js"></script>
 <script src="https://hgverwaltung.ch/static/hgutil-1.1.js"></script>
 
 <style>
@@ -140,7 +140,7 @@
 				if (row.funktionen) {
 					row.funktionen = row.funktionen.replace(/, /g, '<br>');
 				}
-				
+
 				if (row.foto) {
 					row.foto = 'https://www.hgverwaltung.ch/api/1/' + club + '/spielerfoto/' + row.foto;
 				}
@@ -151,8 +151,8 @@
 				if (row.jahrgang) {
 					row.jahrgang = '(' + row.jahrgang + ')';
 				}
-				
-				
+
+
 				if (row.ehrenmitglied) {
 					row.ehrenmitglied = 'JA';
 				}
@@ -172,7 +172,7 @@
 				if (row.aufgestellt) {
 					row.aufgestellt = 'JA';
 				}
-				
+
 			});
 
 			dataList.add(results);
