@@ -169,7 +169,7 @@
 					info = '<h3>' + data[i].name + '</h3>';
 				}
 				info += '<p>';
-				info += '<a href="https://maps.google.com/?daddr=' + data[i].lat + ',' + data[i].lng + '" target="_blank">Google Routenplaner</a>';
+				info += '<a href="https://maps.google.com?daddr=' + data[i].lat + ',' + data[i].lng + '" target="_blank">Google Routenplaner</a>';
 				info += '</p>';
 
 				var popup = new mapboxgl.Popup({ offset: 33 }).setHTML(info);

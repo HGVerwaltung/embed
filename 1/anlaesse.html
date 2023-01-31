@@ -148,7 +148,7 @@
 			var inklSpiele = document.querySelector('#hg_inklSpiele input[name="inklSpiele"]:checked').value;
 
 			if (jahr) {
-				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/anlaesse/?jahr=' + jahr + '&inklSpiele=' + inklSpiele;
+				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/anlaesse?jahr=' + jahr + '&inklSpiele=' + inklSpiele;
 				fetch(url).then(function (response) {
 					return response.json();
 				}).then(function (results) {
