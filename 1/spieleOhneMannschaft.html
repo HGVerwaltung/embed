@@ -114,6 +114,11 @@
 			var jahr = document.getElementById('hg_jahrSelect').value;
 			var team = 'A';
 
+			var mannschaft = hgutil.getParameterByName('mannschaft');
+			if (mannschaft) {
+				team = mannschaft;
+			}
+
 			if (jahr && team) {
 				var url = 'https://www.hgverwaltung.ch/api/1/' + club + '/spiele/' + team + '?jahr=' + jahr;
 				fetch(url).then(function (response) {
