@@ -7,7 +7,6 @@
     <script src="https://hgverwaltung.ch/polyfill/v3/polyfill.min.js?features=fetch"></script>
     <script src="https://cdn.jsdelivr.net/npm/list.js@2.3.1/dist/list.min.js"></script>
     <style>
-        /* <![CDATA[ */
         #hg_ligaSelect,
         #hg_gruppeSelect,
         #hg_data {
@@ -37,7 +36,6 @@
         #hg_data .sort.desc::after {
             content: "\25bc";
         }
-        /*]]>*/
     </style>
 </head>
 <body>
@@ -103,6 +101,7 @@
                     return response.json();
                 })
                 .then(function(data) {
+                    ligaSelect.innerHTML = '<option value="">Liga auswählen...</option>';
                     var ligas = [...new Set(data.map(item => item.liga))];
                     ligas.forEach(function(liga) {
                         var option = document.createElement('option');
@@ -141,6 +140,11 @@
                             option.textContent = gruppe;
                             gruppeSelect.appendChild(option);
                         });
+                        
+                        if (gruppen.length === 1) {
+                            gruppeSelect.value = gruppen[0];
+                            loadRangliste();
+                        }
                     })
                     .catch(function(error) {
                         console.error('Fehler beim Aktualisieren der Gruppen:', error);
