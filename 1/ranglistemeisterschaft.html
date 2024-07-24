@@ -98,7 +98,7 @@
         var dataList = new List('hg_data', options);
 
         function loadLigaGruppe() {
-            fetch('https://test.hgverwaltung.ch/api/1/live/meisterschaft/liga')
+            fetch('https://www.hgverwaltung.ch/api/1/live/meisterschaft/liga')
                 .then(function(response) {
                     return response.json();
                 })
@@ -124,7 +124,7 @@
             gruppeSelect.innerHTML = '<option value="">Gruppe auswählen</option>';
 
             if (selectedLiga) {
-                fetch('https://test.hgverwaltung.ch/api/1/live/meisterschaft/liga')
+                fetch('https://www.hgverwaltung.ch/api/1/live/meisterschaft/liga')
                     .then(function(response) {
                         return response.json();
                     })
@@ -153,7 +153,7 @@
             var gruppe = gruppeSelect.value;
 
             if (liga && gruppe) {
-                var url = 'https://test.hgverwaltung.ch/api/1/live/meisterschaft-rangliste-mannschaft/' + liga + '/' + gruppe;
+                var url = 'https://www.hgverwaltung.ch/api/1/live/meisterschaft-rangliste-mannschaft/' + liga + '/' + gruppe;
                 fetch(url)
                     .then(function(response) {
                         return response.json();
