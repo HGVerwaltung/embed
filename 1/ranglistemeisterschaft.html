@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rangliste Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        select {
+            margin: 10px 0;
+            padding: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rangliste Viewer</h1>
+        <select id="ligaSelect">
+            <option value="">Liga auswählen</option>
+        </select>
+        <select id="gruppeSelect">
+            <option value="">Gruppe auswählen</option>
+        </select>
+        <table id="ranglisteTable">
+            <thead>
+                <tr>
+                    <th>Rang</th>
+                    <th>Mannschaft</th>
+                    <th>Anzahl Spiele</th>
+                    <th>Rangpunkte</th>
+                    <th>Punkte</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const ligaSelect = document.getElementById('ligaSelect');
+        const gruppeSelect = document.getElementById('gruppeSelect');
+        const ranglisteTable = document.getElementById('ranglisteTable');
+
+        async function loadLigaGruppe() {
+            try {
+                const response = await axios.get('https://test.hgverwaltung.ch/api/1/live/meisterschaft/liga');
+                const data = response.data;
+
+                const ligas = [...new Set(data.map(item => item.liga))];
+                ligas.forEach(liga => {
+                    const option = document.createElement('option');
+                    option.value = liga;
+                    option.textContent = liga;
+                    ligaSelect.appendChild(option);
+                });
+
+                ligaSelect.addEventListener('change', updateGruppe);
+                gruppeSelect.addEventListener('change', loadRangliste);
+            } catch (error) {
+                console.error('Fehler beim Laden der Liga/Gruppe:', error);
+            }
+        }
+
+        function updateGruppe() {
+            const selectedLiga = ligaSelect.value;
+            gruppeSelect.innerHTML = '<option value="">Gruppe auswählen</option>';
+
+            if (selectedLiga) {
+                axios.get('https://test.hgverwaltung.ch/api/1/live/meisterschaft/liga')
+                    .then(response => {
+                        const data = response.data;
+                        const gruppen = data.filter(item => item.liga === selectedLiga)
+                                           .map(item => item.gruppe);
+
+                        gruppen.forEach(gruppe => {
+                            const option = document.createElement('option');
+                            option.value = gruppe;
+                            option.textContent = gruppe;
+                            gruppeSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Fehler beim Aktualisieren der Gruppen:', error));
+            }
+        }
+
+        async function loadRangliste() {
+            const liga = ligaSelect.value;
+            const gruppe = gruppeSelect.value;
+
+            if (liga && gruppe) {
+                try {
+                    const response = await axios.get(`https://test.hgverwaltung.ch/api/1/live/meisterschaft-rangliste-mannschaft/${liga}/${gruppe}`);
+                    const data = response.data;
+
+                    const tbody = ranglisteTable.querySelector('tbody');
+                    tbody.innerHTML = '';
+
+                    data.forEach(item => {
+                        const row = tbody.insertRow();
+                        row.insertCell(0).textContent = item.rang;
+                        row.insertCell(1).textContent = item.mannschaft;
+                        row.insertCell(2).textContent = item.anzahlSpiele;
+                        row.insertCell(3).textContent = item.rangpunkte;
+                        row.insertCell(4).textContent = item.punkte;
+                    });
+                } catch (error) {
+                    console.error('Fehler beim Laden der Rangliste:', error);
+                }
+            }
+        }
+
+        loadLigaGruppe();
+    </script>
+</body>
+</html>
